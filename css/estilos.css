@@ -1,0 +1,231 @@
+/* ==============================================================
+   estilos.css — Apariencia estilo iOS con efecto vidrio transparente
+   (Solo define cómo se ve la página; no tiene lógica del juego.)
+   ============================================================== */
+
+/* ---------- VARIABLES: valores que se reutilizan en todo el archivo ---------- */
+:root {
+  --vidrio: rgba(255, 255, 255, 0.15);          /* blanco al 15 %: fondo de los paneles de vidrio */
+  --borde-vidrio: rgba(255, 255, 255, 0.35);    /* borde blanco semitransparente */
+  --desenfoque: blur(24px) saturate(170%);      /* desenfoque de lo que hay detrás del vidrio */
+  --azul: #0a84ff;                              /* azul de iOS (botón principal) */
+  --rojo: #ff3b30;                              /* rojo de iOS (cartas rojas y botón rendirse) */
+  --verde: #30d158;                             /* verde de iOS (destino válido) */
+  --naranja: #ff9f0a;                           /* naranja de iOS (carta seleccionada) */
+  --ancho-carta: clamp(46px, 11vw, 100px);      /* ancho de carta: mínimo 46px, ideal 11 % de la pantalla, máximo 100px */
+  --alto-carta: calc(var(--ancho-carta) * 1.4); /* alto = 1.4 veces el ancho (proporción de carta real) */
+  --sep-oculta: calc(var(--alto-carta) * 0.12); /* cuánto baja cada carta boca abajo en una columna */
+  --sep-visible: calc(var(--alto-carta) * 0.28);/* cuánto baja cada carta boca arriba (más, para ver su valor) */
+  font-family: -apple-system, "SF Pro Display", "Segoe UI", Roboto, Arial, sans-serif; /* letra tipo iPhone */
+}
+
+/* ---------- AJUSTES GENERALES ---------- */
+* { box-sizing: border-box; }                   /* el ancho de un elemento incluye su borde y relleno */
+html { background: #160c33; }                   /* color de respaldo (morado oscuro) */
+body {
+  margin: 0;                                    /* sin márgenes alrededor de la página */
+  min-height: 100vh;                            /* ocupa al menos toda la altura de la pantalla */
+  color: white;                                 /* texto blanco */
+}
+button { font: inherit; color: inherit; cursor: pointer; } /* los botones usan la misma letra y la manito */
+
+/* ---------- FONDO DE COLORES (tipo fondo de pantalla de iOS) ---------- */
+.fondo {
+  position: fixed;                              /* queda quieto aunque la página se mueva */
+  inset: 0;                                     /* ocupa toda la pantalla */
+  z-index: -1;                                  /* queda detrás de todo */
+  overflow: hidden;                             /* las manchas que se salen no se ven */
+}
+.mancha {
+  position: absolute;                           /* se ubica libremente dentro del fondo */
+  border-radius: 50%;                           /* forma de círculo */
+  filter: blur(70px);                           /* muy desenfocada para que parezca una luz de color */
+  opacity: 0.85;                                /* un poco transparente */
+  animation: flotar 22s ease-in-out infinite alternate; /* se mueve lento, ida y vuelta, sin parar */
+}
+.m1 { width: 55vmax; height: 55vmax; left: -12vmax; top: -15vmax; background: #ff4f8b; }   /* rosada, arriba a la izquierda */
+.m2 { width: 50vmax; height: 50vmax; right: -14vmax; top: -8vmax; background: #3fa9ff; }   /* azul, arriba a la derecha */
+.m3 { width: 46vmax; height: 46vmax; left: 18vmax; bottom: -22vmax; background: #a35cff; } /* morada, abajo */
+.m4 { width: 34vmax; height: 34vmax; right: 4vmax; bottom: -10vmax; background: #ffab3d; } /* naranja, abajo a la derecha */
+@keyframes flotar {                             /* la animación "flotar": de dónde a dónde se mueve la mancha */
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(6vmax, 5vmax) scale(1.08); }
+}
+
+/* ---------- EFECTO VIDRIO (se aplica a menú, barra y ventanas) ---------- */
+.vidrio {
+  background: var(--vidrio);                    /* blanco muy transparente */
+  -webkit-backdrop-filter: var(--desenfoque);   /* desenfoque del fondo (Safari) */
+  backdrop-filter: var(--desenfoque);           /* desenfoque del fondo (Chrome, Edge, Firefox) */
+  border: 1px solid var(--borde-vidrio);        /* borde fino blanco */
+  box-shadow: 0 10px 40px rgba(10, 0, 40, 0.3); /* sombra suave para que "flote" */
+}
+
+/* ---------- PANTALLAS (menú y juego): solo se ve la que tiene la clase "activa" ---------- */
+.pantalla { display: none; min-height: 100vh; } /* oculta por defecto */
+.pantalla.activa { display: flex; }             /* la activa sí se muestra */
+
+/* ---------- MENÚ PRINCIPAL ---------- */
+#pantalla-menu { align-items: center; justify-content: center; padding: 20px; } /* centra la tarjeta */
+.tarjeta {
+  width: min(380px, 100%);                      /* ancho máximo 380px (o toda la pantalla si es más pequeña) */
+  border-radius: 32px;                          /* esquinas muy redondeadas, como iOS */
+  padding: 32px 24px;                           /* espacio interior */
+  text-align: center;                           /* texto centrado */
+  display: flex; flex-direction: column; gap: 10px; /* los elementos uno debajo del otro con separación */
+}
+.icono {
+  width: 88px; height: 88px; margin: 0 auto 6px; /* cuadro centrado */
+  border-radius: 22px;                          /* esquinas de ícono de app */
+  background: white;                            /* fondo blanco */
+  display: grid; place-items: center;           /* centra el contenido */
+  font-size: 40px; color: #1c1c1e;              /* símbolos grandes */
+}
+.icono .rojo { color: var(--rojo); }            /* el corazón en rojo */
+.tarjeta h1 { margin: 0; font-size: 34px; }     /* título grande */
+.subtitulo { margin: 0 0 12px; opacity: 0.75; } /* subtítulo más tenue */
+.integrantes { margin: 10px 0 0; font-size: 13px; opacity: 0.7; } /* texto pequeño al final */
+
+/* ---------- BOTONES ---------- */
+.boton {
+  border: 1px solid var(--borde-vidrio);        /* borde de vidrio */
+  background: rgba(255, 255, 255, 0.2);         /* fondo semitransparente */
+  border-radius: 14px;                          /* esquinas redondeadas */
+  padding: 13px 16px;                           /* tamaño cómodo para tocar */
+  font-size: 16px; font-weight: 600;            /* letra seminegrita */
+}
+.boton:hover { background: rgba(255, 255, 255, 0.3); } /* se aclara al pasar el mouse */
+.boton.primario { background: var(--azul); border-color: transparent; } /* botón principal en azul */
+.boton.peligro { background: var(--rojo); border-color: transparent; }  /* botón de rendirse en rojo */
+.boton.pequeno { padding: 8px 12px; font-size: 14px; }                  /* versión chica para la barra */
+
+/* ---------- PANTALLA DE JUEGO ---------- */
+#pantalla-juego { flex-direction: column; gap: 14px; padding: 12px; } /* barra arriba y tablero abajo */
+.barra {
+  display: flex; align-items: center; gap: 10px; /* elementos en fila */
+  border-radius: 20px; padding: 8px 12px;
+}
+.estadisticas { display: flex; gap: 8px; flex: 1; justify-content: center; } /* datos centrados */
+.dato {
+  display: flex; flex-direction: column; align-items: center; /* título arriba, número abajo */
+  min-width: 70px; padding: 2px 8px; border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+}
+.dato small { font-size: 11px; opacity: 0.75; text-transform: uppercase; } /* título pequeño en mayúsculas */
+.dato b { font-size: 18px; }                    /* número grande */
+
+/* ---------- TABLERO ---------- */
+.tablero { display: flex; flex-direction: column; gap: 22px; align-items: center; user-select: none; } /* no se selecciona texto al hacer clic */
+.fila-superior, .fila-columnas {
+  display: grid;                                /* cuadrícula... */
+  grid-template-columns: repeat(7, var(--ancho-carta)); /* ...de 7 columnas del ancho de una carta */
+  gap: clamp(6px, 1.5vw, 16px);                 /* separación entre columnas */
+}
+.espacio { visibility: hidden; }                /* hueco vacío entre el descarte y las fundaciones */
+
+/* Ranura = el hueco donde va una carta (mazo, descarte o fundación) */
+.ranura {
+  position: relative;                           /* para ubicar la carta encima */
+  width: var(--ancho-carta); height: var(--alto-carta);
+  border-radius: 10px;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.08);
+  display: grid; place-items: center;           /* centra el símbolo */
+  font-size: calc(var(--ancho-carta) * 0.38);   /* símbolo grande según el tamaño de la carta */
+  color: rgba(255, 255, 255, 0.45);             /* símbolo tenue */
+  cursor: pointer;
+}
+.columna {
+  position: relative;                           /* las cartas se ubican dentro de la columna */
+  width: var(--ancho-carta);
+  min-height: calc(var(--alto-carta) * 3.2);    /* alto mínimo para que quepan varias cartas */
+  border-radius: 10px;
+  cursor: pointer;
+}
+.columna.vacia {                                /* columna sin cartas: se ve el hueco con una K */
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px dashed rgba(255, 255, 255, 0.3);
+}
+.columna.vacia::before {                        /* dibuja la letra K en la columna vacía */
+  content: "K"; position: absolute; top: calc(var(--alto-carta) * 0.3); width: 100%;
+  text-align: center; font-size: calc(var(--ancho-carta) * 0.38); color: rgba(255, 255, 255, 0.35);
+}
+.destino-valido { box-shadow: 0 0 0 3px var(--verde), 0 0 20px rgba(48, 209, 88, 0.7); } /* brillo verde */
+
+/* ---------- CARTAS ---------- */
+.carta {
+  position: absolute; left: 0; top: 0;          /* se ubica dentro de su columna o ranura */
+  width: var(--ancho-carta); height: var(--alto-carta);
+  border-radius: 10px;
+  background: linear-gradient(160deg, #ffffff, #f2f2f7); /* blanco con un leve degradado */
+  color: #1c1c1e;                               /* texto negro */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);    /* sombra para separarla de la de abajo */
+  transition: box-shadow 0.15s, transform 0.15s;/* el brillo y el movimiento cambian suave */
+}
+.carta.roja { color: var(--rojo); }             /* corazones y diamantes en rojo */
+.carta .esquina {                               /* valor y palo arriba a la izquierda, ej. "Q♥" */
+  position: absolute; top: 4%; left: 8%;
+  font-weight: 700; font-size: calc(var(--ancho-carta) * 0.24);
+}
+.carta .centro {                                /* palo grande en el centro */
+  position: absolute; inset: 0; display: grid; place-items: center;
+  padding-top: 15%; font-size: calc(var(--ancho-carta) * 0.48);
+}
+.carta.oculta {                                 /* carta boca abajo: se ve el dorso */
+  background: linear-gradient(145deg, #0a84ff, #8e5cf7 55%, #ff4f8b); /* degradado azul-morado-rosado */
+  border: 3px solid rgba(255, 255, 255, 0.85);  /* marco blanco */
+}
+.carta.oculta .esquina, .carta.oculta .centro { display: none; } /* boca abajo no se ve el valor */
+.carta.seleccionada {                           /* carta elegida por el jugador */
+  box-shadow: 0 0 0 3px var(--naranja), 0 0 22px rgba(255, 159, 10, 0.9); /* brillo naranja */
+  transform: translateY(-4px);                  /* se levanta un poquito */
+}
+
+/* ---------- VENTANAS (reglas, victoria, derrota, puntajes) ---------- */
+.capa {
+  position: fixed; inset: 0;                    /* cubre toda la pantalla */
+  background: rgba(8, 2, 30, 0.4);              /* oscurece lo de atrás */
+  display: grid; place-items: center;           /* centra la ventana */
+  padding: 18px; z-index: 50;                   /* queda encima de todo */
+}
+.capa[hidden] { display: none; }                /* cuando tiene "hidden", no se ve */
+.ventana {
+  width: min(520px, 100%); max-height: 88vh; overflow: auto; /* si el contenido es largo, se desplaza */
+  border-radius: 26px; padding: 24px 22px;
+  background: rgba(255, 255, 255, 0.2);
+}
+.ventana h2 { margin: 0 0 10px; text-align: center; }
+.ventana p, .ventana li { line-height: 1.5; }
+.botones-ventana { display: flex; gap: 10px; margin-top: 16px; } /* botones en fila al final */
+.botones-ventana .boton { flex: 1; }            /* todos del mismo ancho */
+.campo {                                        /* cuadro de texto para escribir */
+  width: 100%; padding: 12px 14px; border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.15);
+  color: white; font-size: 16px; outline: none;
+}
+.campo:focus { border-color: var(--azul); }     /* borde azul al escribir */
+.error { min-height: 20px; margin: 6px 0 0; color: #ffd0cc; font-size: 14px; } /* mensaje de error rosado */
+.tabla { width: 100%; border-collapse: collapse; } /* tabla del ranking */
+.tabla th, .tabla td { padding: 8px 6px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
+.recorrido {                                    /* cajita con un recorrido del árbol */
+  padding: 8px 12px; margin-top: 8px; border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12); word-break: break-word;
+}
+
+/* ---------- AVISO FLOTANTE (estilo "isla dinámica" de iPhone) ---------- */
+.aviso {
+  position: fixed; left: 50%; top: 14px;        /* centrado arriba */
+  transform: translate(-50%, -150%);            /* escondido por encima de la pantalla */
+  max-width: 90vw; padding: 11px 20px; border-radius: 22px; z-index: 80;
+  background: rgba(20, 20, 24, 0.85); text-align: center;
+  transition: transform 0.3s;                   /* baja suavemente */
+}
+.aviso.visible { transform: translate(-50%, 0); } /* cuando tiene "visible", baja y se ve */
+
+/* ---------- PANTALLAS PEQUEÑAS (celular) ---------- */
+@media (max-width: 640px) {                     /* si la pantalla mide menos de 640px de ancho... */
+  .barra { flex-wrap: wrap; }                   /* ...la barra puede ocupar dos renglones */
+  .estadisticas { order: 3; width: 100%; }      /* ...y los datos pasan al segundo renglón */
+  .dato { min-width: 0; flex: 1; }
+}
+.campo::placeholder { color: rgba(255, 255, 255, 0.65); } /* texto de ayuda del cuadro más visible */

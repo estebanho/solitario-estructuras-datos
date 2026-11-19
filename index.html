@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">                                                    <!-- tildes, ñ y símbolos de cartas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">     <!-- se adapta al celular -->
+  <title>Solitario - Estructuras de Datos</title>                          <!-- texto de la pestaña -->
+  <link rel="stylesheet" href="css/estilos.css">                           <!-- carga la apariencia -->
+</head>
+<body>
+
+  <!-- ================= FONDO DE COLORES (tipo iOS) ================= -->
+  <div class="fondo">                         <!-- contenedor del fondo, queda detrás de todo -->
+    <span class="mancha m1"></span>           <!-- mancha rosada -->
+    <span class="mancha m2"></span>           <!-- mancha azul -->
+    <span class="mancha m3"></span>           <!-- mancha morada -->
+    <span class="mancha m4"></span>           <!-- mancha naranja -->
+  </div>
+
+  <!-- ================= PANTALLA 1: MENÚ PRINCIPAL ================= -->
+  <section id="pantalla-menu" class="pantalla activa">          <!-- "activa" = es la que se ve al abrir -->
+    <div class="tarjeta vidrio">                                 <!-- tarjeta de vidrio en el centro -->
+      <div class="icono">♠<span class="rojo">♥</span></div>     <!-- ícono tipo app -->
+      <h1>Solitario</h1>                                         <!-- título -->
+      <p class="subtitulo">Klondike · Estructuras de Datos</p>   <!-- subtítulo -->
+      <button id="btn-nueva" class="boton primario">Nueva partida</button>        <!-- empieza a jugar -->
+      <button id="btn-continuar" class="boton" hidden>Continuar partida</button>  <!-- oculto hasta que haya partida -->
+      <button id="btn-reglas" class="boton">Reglas y controles</button>           <!-- abre las reglas -->
+      <button id="btn-puntajes" class="boton">Mejores puntajes</button>           <!-- abre la tabla (árbol BST) -->
+      <p id="integrantes" class="integrantes"></p>               <!-- aquí JavaScript escribe los integrantes -->
+    </div>
+  </section>
+
+  <!-- ================= PANTALLA 2: JUEGO ================= -->
+  <section id="pantalla-juego" class="pantalla">                 <!-- oculta al principio -->
+
+    <!-- Barra de arriba: menú, datos de la partida y rendirse -->
+    <header class="barra vidrio">
+      <button id="btn-menu" class="boton pequeno">‹ Menú</button>          <!-- vuelve al menú -->
+      <div class="estadisticas">
+        <div class="dato"><small>Puntaje</small><b id="dato-puntaje">0</b></div>          <!-- puntaje -->
+        <div class="dato"><small>Movimientos</small><b id="dato-movimientos">0</b></div>  <!-- movimientos -->
+        <div class="dato"><small>Tiempo</small><b id="dato-tiempo">0:00</b></div>         <!-- tiempo -->
+        <div class="dato"><small>Pasada</small><b id="dato-pasada">1/3</b></div>          <!-- pasada del mazo -->
+      </div>
+      <button id="btn-rendirse" class="boton pequeno peligro">Rendirse</button> <!-- se rinde (pierde) -->
+    </header>
+
+    <!-- Tablero -->
+    <main id="tablero" class="tablero">
+
+      <!-- Fila de arriba: mazo, descarte, un espacio y las 4 fundaciones -->
+      <div class="fila-superior">
+        <div id="mazo" class="ranura">↻</div>                    <!-- MAZO DE ROBO (lista circular) -->
+        <div id="descarte" class="ranura"></div>                 <!-- carta visible del mazo -->
+        <div class="espacio"></div>                              <!-- hueco vacío -->
+        <div id="fundacion-0" class="ranura" data-numero="0">♠</div>  <!-- FUNDACIÓN picas (pila) -->
+        <div id="fundacion-1" class="ranura" data-numero="1">♥</div>  <!-- FUNDACIÓN corazones (pila) -->
+        <div id="fundacion-2" class="ranura" data-numero="2">♦</div>  <!-- FUNDACIÓN diamantes (pila) -->
+        <div id="fundacion-3" class="ranura" data-numero="3">♣</div>  <!-- FUNDACIÓN tréboles (pila) -->
+      </div>
+
+      <!-- Fila de abajo: las 7 columnas (cada una es una lista doble) -->
+      <div class="fila-columnas">
+        <div id="columna-0" class="columna" data-numero="0"></div>
+        <div id="columna-1" class="columna" data-numero="1"></div>
+        <div id="columna-2" class="columna" data-numero="2"></div>
+        <div id="columna-3" class="columna" data-numero="3"></div>
+        <div id="columna-4" class="columna" data-numero="4"></div>
+        <div id="columna-5" class="columna" data-numero="5"></div>
+        <div id="columna-6" class="columna" data-numero="6"></div>
+      </div>
+    </main>
+  </section>
+
+  <!-- ================= VENTANA FLOTANTE (reglas, victoria, derrota, puntajes) ================= -->
+  <div id="capa" class="capa" hidden>                            <!-- fondo oscuro; oculto al principio -->
+    <div id="ventana" class="ventana vidrio"></div>              <!-- JavaScript escribe aquí el contenido -->
+  </div>
+
+  <!-- ================= AVISO DE ARRIBA (mensajes cortos) ================= -->
+  <div id="aviso" class="aviso"></div>
+
+  <!-- ================= JAVASCRIPT (el orden importa) ================= -->
+  <!-- 1. Estructuras de datos -->
+  <script src="js/estructuras/Nodos.js"></script>
+  <script src="js/estructuras/Pila.js"></script>
+  <script src="js/estructuras/Cola.js"></script>
+  <script src="js/estructuras/ListaCircular.js"></script>
+  <script src="js/estructuras/ListaDoble.js"></script>
+  <script src="js/estructuras/ArbolBST.js"></script>
+  <!-- 2. Lógica del juego -->
+  <script src="js/juego/Carta.js"></script>
+  <script src="js/juego/Solitario.js"></script>
+  <script src="js/juego/Puntajes.js"></script>
+  <!-- 3. Interfaz (la agregamos en el siguiente paso) -->
+  <script src="js/interfaz/Interfaz.js"></script>
+
+</body>
+</html>
