@@ -6,7 +6,7 @@
  */
 
 // Integrantes del grupo (cambiar por los nombres reales)
-const INTEGRANTES = 'Esteban Hernández · Integrante 2 · Integrante 3';
+const INTEGRANTES = 'Esteban Hernández · Yoskar Lopez ';
 
 /**
  * Atajo para buscar un elemento de la página por su selector.
