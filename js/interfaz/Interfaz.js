@@ -499,7 +499,7 @@ class Interfaz {                                            // molde de la inter
       titulo = '🏳️ Te rendiste';
       explicacion = 'La partida terminó.';
     } else {                                                // si no quedaron jugadas...
-      titulo = '😕 Perdiste: no quedan jugadas';
+      titulo = '😕 Perdiste: no quedan jugadas 🤣';
       explicacion = 'Ya no hay movimientos que ayuden a avanzar y el mazo se agotó.';
     }
     const ventana = this.abrirVentana(
